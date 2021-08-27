@@ -1,16 +1,58 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm'
 import './styles.css'
 import { todoReducer } from './todoReducer'
 
-const initialState = [{
-    id: new Date().getTime(),
-    desc: 'Aprender React',
-    done: false
-}]
+
+/**
+ *  useReducer( todoReducer, [] , init )
+ *  primer parametro: reducer que maneja el estado
+ *  segundo parametro : estao con el que se inicializa
+ *  tercer parametro: es uan funcion opcional que computa el estado inicial y no se ejecuta cada vez que hay cambios
+ */
+const init = () => {
+    // return [{
+    //     id: new Date().getTime(),
+    //     desc: 'Aprender React',
+    //     done: false
+    // }] 
+
+    return JSON.parse( localStorage.getItem('todos') ) || []
+}
 
 export const TodoApp = () => {
 
-    const [ todos , dispatch] = useReducer(todoReducer, initialState )
+    const [ todos , dispatch ] = useReducer(todoReducer, [] , init )
+    const [ { description } , handleInputChange, reset ] = useForm({
+        description: ''
+    })
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ) )
+    }, [todos] )
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if( description.trim().length < 1 ){
+            return
+        }
+
+        const newTodo = {
+            id: new Date().getTime(),
+            desc: description,
+            done: false
+        }
+
+        const action = {
+            type: 'add',
+            payload: newTodo
+        }
+
+        dispatch( action )
+        reset()
+    }
+
     return (
         <div>
 
@@ -42,7 +84,7 @@ export const TodoApp = () => {
                         <h4>Agregar TODO</h4>
                         <hr />
 
-                        <form>
+                        <form onSubmit={ handleSubmit }>
 
                             <input 
                                 type="text"
@@ -50,9 +92,12 @@ export const TodoApp = () => {
                                 placeholder="Aprender..."
                                 autoComplete="off"
                                 className="form-control"
+                                value={ description }
+                                onChange={ handleInputChange }
                             />
 
                             <button
+                                type="submit"
                                 className="btn btn-primary btn-block mt-1"
                             >
                                 Agregar
