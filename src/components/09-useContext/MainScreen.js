@@ -4,9 +4,7 @@ import { UserContext } from './UserContext'
 
 export const MainScreen = () => {
 
-    const [user, setUser] = useState({
-
-    })
+    const [user, setUser] = useState({})
 
     /**
      *  UserContext esta pendiente de los cambios de user y avisa a sus componentes hijos de los mismos

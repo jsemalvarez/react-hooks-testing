@@ -8,7 +8,7 @@ import { todoReducer } from './todoReducer'
 /**
  *  useReducer( todoReducer, [] , init )
  *  primer parametro: reducer que maneja el estado
- *  segundo parametro : estao con el que se inicializa
+ *  segundo parametro : estado con el que se inicializa
  *  tercer parametro: es uan funcion opcional que computa el estado inicial y no se ejecuta cada vez que hay cambios
  */
 const init = () => {
